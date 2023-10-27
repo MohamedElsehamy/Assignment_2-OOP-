@@ -1,0 +1,36 @@
+#include <iostream>
+#include <string>
+#include <cctype>
+using namespace std;
+
+string correctSentence(const string& sentence) {
+    string s;
+    bool capital = true;
+    for (char c : sentence) {
+        if (capital && c != ' ' && c != ',' && c != '.') {
+            s += toupper(c);
+            capital = false;
+        }
+        else if (!capital && c != ' ' && c != ',' && c != '.')
+            s += tolower(c);
+        else if (c == ' ') {
+            if (s.back() != ' ')
+                s += ' ';
+        }
+        else if (c == ',')
+            s += ',';
+        else {
+            s += '.';
+            break;
+        }
+    }
+    return s;
+}
+
+int main() {
+    string x;
+    getline(cin, x);
+    string corrected = correctSentence(x);
+    cout << corrected << endl;
+    return 0;
+}
