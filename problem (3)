@@ -1,0 +1,27 @@
+#include <iostream>
+#include <vector>
+#include <bits/stdc++.h>
+#include<algorithm>
+using namespace std;
+
+void split (string s , char d) {
+    vector <char> v;
+    for (int i = 0; i < s.size(); i++) {
+        if (s[i] != d ) {
+            v.push_back(s[i]);
+        }
+        else {
+            v.push_back(' ');
+        }
+
+    }
+    for (int i = 0; i < v.size(); ++i) {
+        cout << v[i];
+    }
+}
+
+int main() {
+    split("10,20,30" ,',');
+    cout << endl;
+    split( "do re mi fa so la ti do", ' ' ) ;
+}
