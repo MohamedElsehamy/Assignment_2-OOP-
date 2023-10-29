@@ -1,0 +1,23 @@
+void bears(int n){
+    if (n == 42){
+        cout<<"True";
+    }
+    else if (n%5 ==0 && n - 42 >=42){
+        bears(n-42);
+    }
+    else if (n%2 == 0 && n/2 >= 42){
+        bears(n/2);
+    }
+    else if ((n%3 ==0 || n%4 == 0) && (n - ((n%10)*((n%100)/10)) >= 42)){
+        bears(n - ((n%10)*((n%100)/10)));
+    }
+    else {
+        cout << "False";
+    }
+}
+
+int main(){
+    int n_bears;
+    cin>>n_bears;
+     bears(n_bears);
+}
