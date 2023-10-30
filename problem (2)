@@ -1,0 +1,49 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    map <string,string> male = {{"he","he or she"},
+                                {"him", "him or her"},
+                                {"his","his or her"},
+                                {"himself", "himself or herself"},
+                                {"He", "He or she"},
+                                {"Him", "Him or her"},
+                                {"His", "His or her"},
+                                {"Himself","Himself or herself"}};
+
+    string para,newPara;
+    getline(cin,para);
+    para += ' ';
+
+    for (int i = 0; i < para.size(); ++i) {
+        if(para[i] == ' '){
+            if(para[i-1] == '.'||para[i-1] == ','||para[i-1] == ';'||para[i-1] == '?'||para[i-1] == '!'){
+                string subs = para.substr(0,i-1);
+                if ( male.find(subs) != male.end()){
+                    newPara += male[subs];
+                    newPara += para[i-1];
+                    newPara += ' ';
+                }
+                else{
+                    newPara += subs;
+                    newPara += para[i-1];
+                    newPara += ' ';
+                }
+            }
+            else {
+                string subs = para.substr(0, i);
+                if (male.find(subs) != male.end()) {
+                    newPara += male[subs];
+                    newPara += ' ';
+                }
+                else {
+                    newPara += subs;
+                    newPara += ' ';
+                }
+            }
+            para.erase(0,i+1);
+            i = 0;
+        }
+    }
+    cout<<newPara;
+}
