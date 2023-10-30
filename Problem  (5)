@@ -1,63 +1,72 @@
 #include <bits/stdc++.h>
 using namespace std;
-
-struct players {
-    string name ;
-    int score ;
-};
-
-int main() {
-    vector <players> players ;
-    while (true)
-    {
+int main () {
+    vector<pair<int, string>> player;
+    while (true) {
         cout << "Menu: " << endl;
         cout << "1. Add the name of the new player and his score " << endl;
         cout << "2. Print top 10 players " << endl;
         cout << "3. Enter the name of the player that you want to know his score " << endl;
         cout << "4. Exit " << endl;
-        cout << " Please enter your choice: " ;
+        cout << " Please enter your choice: ";
 
-        int c ;
-        cin >> c ;
+        int c;
+        cin >> c;
 
-        if ( c == 1 )
-        {
-            if (players.size() < 10 )
-            {
-                struct players New ;
+        if (c == 1) {
+            string p;
+            int s;
+            sort(player.rbegin(), player.rend());
+            if (player.size() < 10) {
+                string p ;
                 cout << "Enter the name: ";
-                cin >> New.name;
+                cin >> p ;
+                int s;
                 cout << "Enter the score: ";
-                cin >> New.score;
-                players.push_back(New) ;
-            } else
-            {
-                cout << "The list is full ";
+                cin >> s;
+                player.emplace_back(s, p);
+            } else if (player.size() >= 10) {
+                cout << "Enter the name: ";
+                cin >> p;
+                cout << "Enter the score: ";
+                cin >> s;
+                if (player.back().first < s) {
+                    player.pop_back();
+                    player.emplace_back(s, p);
+                } else {
+                    cout << "The list is full";
+                }
             }
-        } /*else if (c == 2)
+        }else if (c == 2)
         {
-
-        }*/else if (c==3)
-        {
-            string Name ;
+            sort(player.rbegin(), player.rend());
+            for (auto &i: player) {
+                cout << "Name: " << i.second << " Score: " << i.first << endl;
+            }
+        } else if (c == 3) {
+            string find;
             cout << "Enter player name: ";
-            cin >> Name ;
-            int x = 0 ;
-            for (const struct players& players : players ) {
-                if (players.name == Name && players.score > x) {
-                    x = players.score;
+            cin >> find;
+            int x = 0;
+            for (auto & i : player) {
+                if (i.second == find && i.first > x) {
+                    x = i.first;
                 }
             }
-                if ( x > 0 )
-                {
-                    cout << "Name: " << Name << " , Score: " << x <<endl;
-                } else
-                {
-                    cout << "Not found in top 10" ;
-                }
-        }else if (c==4)
+            if (x > 0) {
+                cout << "Name: " << find << " , Score: " << x << endl;
+            } else {
+                cout << "Not found in top 10" << endl;
+            }
+        } else if (c == 4)
         {
-            break ;
+            break;
+        } else
+        {
+            cout << "Not found in the choices" << endl;
         }
+
     }
 }
+
+
