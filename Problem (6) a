@@ -1,0 +1,25 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+string decimal(int d)
+{
+    if ( d == 0 )
+    {
+        return "0" ;
+    } else if ( d == 1 )
+    {
+        return "1" ;
+    } else
+    {
+        string s = decimal(d/2) ;
+        s += to_string(d % 2) ;
+        return s ;
+    }
+}
+int main() 
+{
+    cout << "Enter the decimal number: " ;
+    int x ;
+    cin >> x ;
+    cout << decimal(x);
+}
