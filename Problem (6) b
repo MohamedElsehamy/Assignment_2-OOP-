@@ -1,0 +1,51 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+string decimal(int d)
+{
+    if ( d == 0 )
+    {
+        return "0" ;
+    } else if ( d == 1 )
+    {
+        return "1" ;
+    } else
+    {
+        string s = decimal(d/2) ;
+        s += to_string(d % 2) ;
+        return s ;
+    }
+}
+
+void numbers (string pre , int k )
+{
+    for (int i = 0; i < (pow(2,k)) ; i++)
+    {
+        string x = decimal(i) ;
+        if (x.size() < k )
+        {
+            int a = x.size();
+            cout << pre ;
+            for(int i = a ; i < k ;i++)
+            {
+                cout << "0"  ;
+            }
+            cout << x << endl;
+        } else
+        {
+            cout << pre << x << endl;
+        }
+
+    }
+}
+
+
+int main() {
+    cout << "Enter the prefix : " ;
+    string s ;
+    cin >> s ;
+    cout << "Enter the size of subfix : " ;
+    int a ;
+    cin >> a ;
+    numbers(s,a) ;
+}
