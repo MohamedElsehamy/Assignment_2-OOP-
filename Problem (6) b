@@ -41,10 +41,10 @@ void numbers (string pre , int k )
 
 
 int main() {
-    cout << "Enter the prefix : " ;
+    cout << "Enter the prefix:" ;
     string s ;
     cin >> s ;
-    cout << "Enter the size of subfix : " ;
+    cout << "Enter the size of suffix:" ;
     int a ;
     cin >> a ;
     numbers(s,a) ;
