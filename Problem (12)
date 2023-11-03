@@ -30,12 +30,18 @@ int main() {
         para += line;
         para += " ";
     }
-
-
+    for (auto & str: para) {
+        str = tolower(str);
+    }
 
     for (int i = 0; i < para.size(); ++i) {
+        string word;
         if (para[i] == ' ') {
-            string word = para.substr(0, i);
+            if((int)para[i-1]<97||(int)para[i-1]>122){
+                word = para.substr(0, i-1);
+            }
+            else{
+            word = para.substr(0, i);}
             if (points.find(word) != points.end()) {
                 score += points[word];
             }
