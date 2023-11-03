@@ -18,7 +18,7 @@ string decimal(int d)
 }
 int main() 
 {
-    cout << "Enter the decimal number: " ;
+    cout << "Enter the decimal number:" ;
     int x ;
     cin >> x ;
     cout << decimal(x);
