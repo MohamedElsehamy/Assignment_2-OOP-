@@ -1,0 +1,60 @@
+#include <bits/stdc++.h>
+#include <fstream>
+using namespace std;
+
+int main() {
+    map <string,int> points = {{"verification",1},{"password",3},{"action",1},{"bank",3},{"dollars",2},
+                               {"money",2},{"urgent",1},{"suspicious",2},{"help",1},{"security",3},
+                               {"account",3},{"verify",3},{"important",2},{"paypal",3},{"credit",3},{"confirm",2},
+                               {"personal",3},{"alert",1},{"immediately",1},{"address",2},{"information",3},
+                               {"atm",2},{"warning",1},{"check",2},{"threat",1},{"update",3},{"prize",2},
+                               {"debit",3},{"card",3},{"serial",1}};
+
+    vector <pair<string,int>> total = {{"verification",0},{"password",0},{"action",0},{"bank",0},{"dollars",0},
+                                       {"money",0},{"urgent",0},{"suspicious",0},{"help",0},{"security",0},
+                                       {"account",0},{"verify",0},{"important",0},{"paypal",0},{"credit",0},{"confirm",0},
+                                       {"personal",0},{"alert",0},{"immediately",0},{"address",0},{"information",0},
+                                       {"atm",0},{"warning",0},{"check",0},{"threat",0},{"update",0},{"prize",0},
+                                       {"debit",0},{"card",0},{"serial",0}};
+
+    fstream message;
+    string fileName;
+    cout<<"Enter your file name:"<<endl;
+    cin>>fileName;
+    message.open(fileName + ".txt");
+
+
+    string para ,line;
+    int score = 0;
+    while(getline(message,line)) {
+        para += line;
+        para += " ";
+    }
+
+
+
+    for (int i = 0; i < para.size(); ++i) {
+        if (para[i] == ' ') {
+            string word = para.substr(0, i);
+            if (points.find(word) != points.end()) {
+                score += points[word];
+            }
+            for (int j = 0; j < total.size() ; ++j) {
+                if(total[j].first == word){
+                    total[j].second += 1;
+                }
+            }
+
+            para.erase(0, i + 1);
+            i = 0;
+        }
+
+    }
+    for (const auto &str :total) {
+        if(str.second > 0){
+            cout<<str.first<<" "<<str.second<<" "<<(points[str.first] * str.second)<<endl;
+        }
+    }
+    cout<<endl;
+    cout<<"the total score is :"<<score<<endl;
+}
