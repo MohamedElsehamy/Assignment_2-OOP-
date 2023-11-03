@@ -1,0 +1,124 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+bool compareChar(const string& file1, const string& file2) {
+    fstream f1 , f2 ;
+    f1.open(file1 + ".txt");
+    f2.open(file2 + ".txt") ;
+    if ( !f1 || !f2 )
+    {
+        cout << "Failed to open files." << endl;
+        return false;
+    }
+
+    char c1, c2;
+    int lineNum = 1;
+    bool different = false;
+
+    while (f1.get(c1) && f2.get(c2)) {
+        if (c1 != c2) {
+            cout << "Files are different at line " << lineNum << ": " << c1 << " (file1) vs. " << c2 << " (file2)"
+                 << endl;
+            different = true;
+            break;
+        }
+
+        if (c1 == '\n') {
+            lineNum++;
+        }
+        while (f1.get(c1)) {
+            cout << "Extra content in file1 at line " << lineNum << ": " << c1 << " (file1)" << endl;
+            different = true;
+            if (c1 == '\n') {
+                lineNum++;
+            }
+            break;
+        }
+        while (f2.get(c2)) {
+            cout << "Extra content in file2 at line " << lineNum << ": " << c2 << " (file2)" << endl;
+            different = true;
+            if (c2 == '\n') {
+                lineNum++;
+            }
+            break;
+        }
+    }
+    if (!different) {
+        cout << "Files are identical." << endl;
+    }
+
+    f1.close();
+    f2.close();
+    return !different;
+}
+
+bool compareWord(const string& file1, const string& file2) {
+    fstream f1 , f2 ;
+    f1.open(file1 + ".txt");
+    f2.open(file2 + ".txt") ;
+    if ( !f1 || !f2 )
+    {
+        cout << "Failed to open files." << endl;
+        return false;
+    }
+
+    string word1, word2;
+    int wordNum = 1;
+
+    while (f1 >> word1 && f2 >> word2) {
+        if (word1 != word2) {
+            cout << "Files are different at word " << wordNum << ": " << word1 << endl;
+            return false;
+        }
+        wordNum++;
+        break;
+    }
+
+
+    while (f1 >> word1) {
+        wordNum++;
+    }
+    while (f2 >> word2) {
+        wordNum++;
+    }
+
+    cout << "Files are identical." << endl;
+    return true;
+}
+
+
+int main() {
+    while (true)
+    {
+        string file1, file2;
+        cout << "Enter the name of the first file:";
+        cin >> file1;
+        cout << "Enter the name of the second file:";
+        cin >> file2;
+
+        char comparisonType;
+        cout << "Choose the comparison type:" << endl;
+        cout << "1. Character by Character" << endl;
+        cout << "2. Word by Word" << endl;
+        cout << "Enter 1 or 2: ";
+        cin >> comparisonType;
+
+        if (comparisonType == '1') {
+            compareChar(file1, file2);
+            break;
+        } else if (comparisonType == '2') {
+            compareWord(file1, file2);
+            break;
+        } else {
+            cout << "Invalid comparison type. Please enter 1 or 2." << endl;
+        }
+    }
+
+
+    return 0;
+}
+
+
