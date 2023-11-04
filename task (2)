@@ -1,0 +1,246 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+
+class BigReal {
+    char sign;
+    string integer, fraction;
+    bool isValid(string realNumber) {
+        int counter1,counter2;
+        bool flag = true;
+        counter1  = count(realNumber.begin(),realNumber.end(),'+') + count(realNumber.begin(),realNumber.end(),'-');
+        counter2  = count(realNumber.begin(),realNumber.end(),'.');
+        if(realNumber[0] != '.'&&realNumber[0] != '+'&&realNumber[0] != '-'){
+            if((int)realNumber[0] < 48||(int)realNumber[0] > 57){
+                flag = false;
+            }
+        }
+        for (int i = 0; i < realNumber.size(); ++i) {
+            if (realNumber[i] == '+' || realNumber[i] == '-') {
+                if (i > 0)
+                    return false;
+            }
+        }
+        if(counter2 > 1){
+            flag = false;
+        }
+        if(counter1 >1){
+            flag = false;
+        }
+
+        if(count(realNumber.begin(),realNumber.end(),' ')>0){
+            flag =  false;
+        }
+        if(flag){
+            return true;
+        }
+        else return false;
+
+    }
+
+
+
+public:
+    BigReal(){
+        integer = "0";
+        fraction = "0";
+        sign = '+';
+    }
+
+    BigReal(string realNumber){
+        if(isValid(realNumber)) {
+            auto ptr = find(realNumber.begin(), realNumber.end(), '.');
+            if (ptr == end(realNumber)) {
+                integer = realNumber;
+            }
+
+            if (realNumber[0] == '+' || realNumber[0] == '-') {
+                sign = realNumber[0];
+                string newReal = realNumber.erase(0, 1);}
+
+            else {
+                sign = '+';
+            }
+            for (int i = 0; i < realNumber.size(); ++i) {
+                if (realNumber[i] == '.') {
+                    integer = realNumber.substr(0, i);
+                    fraction = realNumber.substr(i + 1, realNumber.size());
+                    break;
+                }
+            }
+            if (integer.size() == 0) {
+                integer = "0";
+            }
+            if (fraction.size() == 0) {
+                fraction = "0";
+            }
+        }
+        else {
+            integer = "0";
+            fraction = "0";
+            sign = '+';
+        }
+    }
+    BigReal(const BigReal &other);
+    BigReal &operator=(BigReal &other);
+    BigReal operator+(BigReal &other);
+    BigReal operator-(BigReal &other);
+    void print(){
+        cout<<sign<<integer<<"."<<fraction<<endl;
+    }
+
+    bool operator<(BigReal &other){
+        if (integer.size() != other.integer.size()) {
+            int diff;
+            if (integer.size() > other.integer.size()) {
+                diff =  integer.size()-other.integer.size() ;
+                for (int i = 0; i < diff; ++i) {
+                    other.integer.insert(0, "0");
+                }
+            }
+            else{
+                diff =  other.integer.size()-integer.size() ;
+                for (int i = 0; i < diff; ++i) {
+                    integer.insert(0, "0");
+                }
+            }
+        }
+            if (fraction.size() != other.fraction.size()) {
+                int diff;
+                if (fraction.size() > other.fraction.size()) {
+                    diff = fraction.size()- other.fraction.size()  ;
+                    for (int i = 0; i < diff; ++i) {
+                        other.fraction += "0";
+                    }
+                }
+
+                else{
+                    diff =   other.fraction.size()-fraction.size() ;
+                    for (int i = 0; i < diff; ++i) {
+                        fraction += "0";
+                    }
+                }
+            }
+            if(sign == '+' and other.sign =='-'){
+                return false;
+            }
+            else if(sign == '-' and other.sign =='+'){
+                return true;
+            }
+            else {
+                if(integer == other.integer && fraction == other.fraction){
+                    return false;
+                }
+                if (sign == '+'){
+                    for (int i = 0; i < integer.size(); ++i) {
+                        if((int)integer[i]>(int)other.integer[i]){
+                            return false;
+                        }
+                        else if ((int)integer[i]<(int)other.integer[i]){
+                            return true;
+                        }
+                    }
+                    for (int i = 0; i < fraction.size(); ++i) {
+                        if((int)fraction[i]>(int)other.fraction[i]){
+                            return false;
+                        }
+                        else if ((int)fraction[i]<(int)other.fraction[i]){
+                            return true;
+                        }
+                    }
+                }
+                else{
+                    for (int i = 0; i < integer.size(); ++i) {
+                        if((int)integer[i]>(int)other.integer[i]){
+                            return true;
+                        }
+                        else if ((int)integer[i]<(int)other.integer[i]){
+                            return false;
+                        }
+                    }
+                    for (int i = 0; i < fraction.size(); ++i) {
+                        if((int)fraction[i]>(int)other.fraction[i]){
+                            return true;
+                        }
+                        else if ((int)fraction[i]<(int)other.fraction[i]){
+                            return false;
+                        }
+                    }
+                }
+
+
+            }
+}
+
+    bool operator>(BigReal &other){
+        BigReal ob(sign+integer+"."+fraction);
+        if(ob == other||ob < other){
+            return false;
+        }
+        else return true;
+    }
+    bool operator==(BigReal &other) {
+        bool flag = true;
+        if(sign == other.sign){
+            if (integer.size() != other.integer.size()) {
+                int diff;
+                if (integer.size() > other.integer.size()) {
+                    diff =  integer.size()-other.integer.size() ;
+                    for (int i = 0; i < diff; ++i) {
+                        other.integer.insert(0, "0");
+                    }
+                }
+                else{
+                    diff =  other.integer.size()-integer.size() ;
+                    for (int i = 0; i < diff; ++i) {
+                        integer.insert(0, "0");
+                    }
+                }
+            }
+            if(integer == other.integer){
+                if (fraction.size() != other.fraction.size()) {
+                    int diff;
+                    if (fraction.size() > other.fraction.size()) {
+                        diff = fraction.size()- other.fraction.size()  ;
+                        for (int i = 0; i < diff; ++i) {
+                            other.fraction += "0";
+                        }
+                    }
+
+                    else{
+                        diff =   other.fraction.size()-fraction.size() ;
+                        for (int i = 0; i < diff; ++i) {
+                            fraction += "0";
+                        }
+                    }
+                    if(fraction == other.fraction){
+                        flag = true;
+                    }
+                    else flag = false;
+                }
+            }
+            else flag = false;
+        }
+        else flag = false;
+        if(flag){
+            return true;
+        }
+        else return false;
+    }
+
+    friend ostream &operator<<(ostream &out, BigReal num);
+    friend istream &operator>>(istream &in, BigReal num);
+};
+
+
+int main(){
+    BigReal ob2("1.002"),ob3("1"),ob4("2.002");
+
+    ob2.print();
+    ob3.print();
+    ob4.print();
+    if(ob2 > ob4){
+        cout<<"yes";
+    }
+    else cout<<"no";
+}
