@@ -228,11 +228,14 @@ public:
         else return false;
     }
 
-    friend ostream &operator<<(ostream &out, BigReal num);
-    friend istream &operator>>(istream &in, BigReal num);
+    friend ostream &operator<<(ostream &out, BigReal&num) {
+        out<<num.sign<<num.integer<<"."<<num.fraction<<endl;
+    }
+    
 };
 
 
+
 int main(){
-   
+    
 }
