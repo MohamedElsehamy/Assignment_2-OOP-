@@ -82,7 +82,11 @@ public:
         }
     }
     BigReal(const BigReal &other);
-    BigReal &operator=(BigReal &other);
+    BigReal &operator=(BigReal &other){
+        sign = other.sign;
+        integer = other.integer;
+        fraction = other.fraction;
+    }
     BigReal operator+(BigReal &other);
     BigReal operator-(BigReal &other);
     void print(){
@@ -231,7 +235,7 @@ public:
     friend ostream &operator<<(ostream &out, BigReal&num) {
         out<<num.sign<<num.integer<<"."<<num.fraction<<endl;
     }
-    
+
 };
 
 
