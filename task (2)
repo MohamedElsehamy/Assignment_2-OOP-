@@ -234,13 +234,5 @@ public:
 
 
 int main(){
-    BigReal ob2("1.002"),ob3("1"),ob4("2.002");
-
-    ob2.print();
-    ob3.print();
-    ob4.print();
-    if(ob2 > ob4){
-        cout<<"yes";
-    }
-    else cout<<"no";
+   
 }
