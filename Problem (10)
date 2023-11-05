@@ -1,0 +1,52 @@
+#include <bits/stdc++.h>
+#include <fstream>
+#include <string>
+using namespace std;
+
+string replace(string word)
+{
+    fstream table ;
+    table.open("table.txt");
+    string line ;
+    while (getline(table,line))
+    {
+        string word1 , wordreplace ;
+        for (int i = 0 ; i <line.size() ; i++)
+        {
+            if (line[i] == ' ')
+            {
+                word1 = line.substr(0,i) ;
+                wordreplace = line.substr(i+1 , line.back());
+            }
+            if (word == word1)
+            {
+                word = wordreplace;
+                break;
+            }
+        }
+    }
+    return word ;
+}
+int main()
+{
+    fstream input , output , table ;
+    input.open("input.txt");
+    output.open("output.txt");
+    table.open("table.txt");
+    string line ;
+    while (getline(input,line))
+    {
+        for (int i = 0 ; i < line.size() ; i++)
+        {
+            if (line[i] == ' ')
+            {
+                string word ;
+                word = line.substr(0, i) ;
+                line.erase(0, i + 1);
+                i = 0;
+                output << replace(word) << " ";
+            }
+        }
+        output << replace(line);
+    }
+}
