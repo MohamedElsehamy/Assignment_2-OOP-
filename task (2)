@@ -81,7 +81,11 @@ public:
             sign = '+';
         }
     }
-    BigReal(const BigReal &other);
+    BigReal(const BigReal &other){
+        sign = other.sign;
+        integer = other.integer;
+        fraction = other.fraction;
+    }
     BigReal &operator=(const BigReal &other){
         sign = other.sign;
         integer = other.integer;
@@ -315,6 +319,5 @@ public:
 
 
 int main(){
-   
-
+       
 }
