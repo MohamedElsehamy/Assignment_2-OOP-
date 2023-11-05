@@ -1,56 +1,82 @@
 #include <bits/stdc++.h>
+#include "domino.h"
 using namespace std;
+deque <domino> deq;
+domino::domino() {
+    leftdots = 0;
+    rightdots = 0;
+}
 
-void dominos() {
-    int n , c = 0 , k;
-    vector <int> v_left , v_right;
-    cout << "Enter the number of dominos' pieces:\n";
+domino::domino(int l, int r) {
+    leftdots = l;
+    rightdots = r;
+}
+
+istream & operator>>(istream & input, domino & d) {
+    input >> d.leftdots >> d.rightdots;
+    return input;
+}
+
+ostream & operator<<(ostream & out, domino & d) {
+    out << d.leftdots << "|" << d.rightdots;
+    return out;
+}
+
+bool operator==(domino d1, domino d2) {
+    return (d1.rightdots == d2.leftdots);
+}
+
+bool isdominochain(vector <domino> v, deque <domino> & deq) {
+    if (v.empty())
+        return true;
+    for (int i = 0; i < v.size(); ++i) {
+        if (deq.empty() || deq.back() == v[i]) {
+            deq.push_back(v[i]);
+            domino tmp = v[i];
+            v.erase(v.begin() + i);
+            if (isdominochain(v, deq))
+                return true;
+            v.insert(v.begin() + i, tmp);
+            deq.pop_back();
+        }
+
+        else if(v[i] == deq.back()) {
+            deq.push_front(v[i]);
+            domino tmp = v[i];
+            v.erase(v.begin() + i);
+            if (isdominochain(v, deq))
+                return true;
+            v.insert(v.begin() + i, tmp);
+            deq.pop_front();
+        }
+    }
+    return false;
+}
+
+void print(deque <domino> deq) {
+    for (int i = 0; i < deq.size(); ++i) {
+        cout << deq[i];
+        if (i != deq.size() - 1) cout << " - ";
+    }
+}
+
+int main() {
+    cout << "Enter the number of dominos:\n";
+    int n;
     cin >> n;
-    cout << "Enter your pieces' dots:\n";
-    while (n--) {
-        int x , y;
-        cin >> x; cin >> y;
-        v_left.push_back(x);
-        v_right.push_back(y);
+    cout << "Enter the left and right dots for each domino:\n";
+    vector <domino> v;
+    for (int i = 0; i < n; ++i) {
+        domino deck;
+        cin >> deck;
+        v.push_back(deck);
     }
-    for (int i = 0; i < v_left.size(); ++i) {
-        for (int j = 0; j < v_right.size(); ++j) {
-            if (v_left[i] == v_right[j]) {
-                c++;
-                break;
-            }
-        }
-    }
-    if (c == v_left.size() - 1) {
+    if(isdominochain(v,deq)){
         cout << "True" << endl;
-        for (int i = 0; i < v_left.size(); ++i) {
-            int m = v_left[i];
-            auto z = find(v_right.begin(), v_right.end(), m);
-            if (z == end(v_right)) {
-                cout << v_left[i] << "|" << v_right[i];
-                k = v_right[i];
-                v_left.erase(v_left.begin() + i);
-                v_right.erase(v_right.begin() + i);
-                break;
-            }
-        }
-        while (!v_right.empty()) {
-            for (int i = 0; i < v_left.size(); ++i) {
-                if (v_left[i] == k) {
-                    cout << " " << "-" << " " << v_left[i] << "|" << v_right[i];
-                    k = v_right[i];
-                    v_left.erase(v_left.begin() + i);
-                    v_right.erase(v_right.begin() + i);
-                    break;
-                }
-            }
-        }
+        print(deq);
     }
     else
         cout << "False" << endl;
 
-}
-
-int main() {
-    dominos();
+    return 0;
 }
