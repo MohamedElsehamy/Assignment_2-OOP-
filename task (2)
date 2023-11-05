@@ -11,6 +11,9 @@ class BigReal {
         bool flag = true;
         counter1 = count(realNumber.begin(), realNumber.end(), '+') + count(realNumber.begin(), realNumber.end(), '-');
         counter2 = count(realNumber.begin(), realNumber.end(), '.');
+        if (regex_match(realNumber,regex("[+-]?\\d*.?\\d+"))){
+            flag = true;
+        }
         if (realNumber[0] != '.' && realNumber[0] != '+' && realNumber[0] != '-') {
             if ((int) realNumber[0] < 48 || (int) realNumber[0] > 57) {
                 flag = false;
@@ -32,6 +35,7 @@ class BigReal {
         if (count(realNumber.begin(), realNumber.end(), ' ') > 0) {
             flag = false;
         }
+
         if (flag) {
             return true;
         } else return false;
@@ -581,5 +585,5 @@ public:
 
 
 int main(){
-   
+    
 }
