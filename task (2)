@@ -5,13 +5,14 @@ using namespace std;
 class BigReal {
     char sign;
     string integer, fraction;
+
     bool isValid(string realNumber) {
-        int counter1,counter2;
+        int counter1, counter2;
         bool flag = true;
-        counter1  = count(realNumber.begin(),realNumber.end(),'+') + count(realNumber.begin(),realNumber.end(),'-');
-        counter2  = count(realNumber.begin(),realNumber.end(),'.');
-        if(realNumber[0] != '.'&&realNumber[0] != '+'&&realNumber[0] != '-'){
-            if((int)realNumber[0] < 48||(int)realNumber[0] > 57){
+        counter1 = count(realNumber.begin(), realNumber.end(), '+') + count(realNumber.begin(), realNumber.end(), '-');
+        counter2 = count(realNumber.begin(), realNumber.end(), '.');
+        if (realNumber[0] != '.' && realNumber[0] != '+' && realNumber[0] != '-') {
+            if ((int) realNumber[0] < 48 || (int) realNumber[0] > 57) {
                 flag = false;
             }
         }
@@ -21,34 +22,32 @@ class BigReal {
                     return false;
             }
         }
-        if(counter2 > 1){
+        if (counter2 > 1) {
             flag = false;
         }
-        if(counter1 >1){
+        if (counter1 > 1) {
             flag = false;
         }
 
-        if(count(realNumber.begin(),realNumber.end(),' ')>0){
-            flag =  false;
+        if (count(realNumber.begin(), realNumber.end(), ' ') > 0) {
+            flag = false;
         }
-        if(flag){
+        if (flag) {
             return true;
-        }
-        else return false;
+        } else return false;
 
     }
 
 
-
 public:
-    BigReal(){
+    BigReal() {
         integer = "0";
         fraction = "0";
         sign = '+';
     }
 
-    BigReal(string realNumber){
-        if(isValid(realNumber)) {
+    BigReal(string realNumber) {
+        if (isValid(realNumber)) {
             auto ptr = find(realNumber.begin(), realNumber.end(), '.');
             if (ptr == end(realNumber)) {
                 integer = realNumber;
@@ -56,9 +55,8 @@ public:
 
             if (realNumber[0] == '+' || realNumber[0] == '-') {
                 sign = realNumber[0];
-                string newReal = realNumber.erase(0, 1);}
-
-            else {
+                string newReal = realNumber.erase(0, 1);
+            } else {
                 sign = '+';
             }
             for (int i = 0; i < realNumber.size(); ++i) {
@@ -74,35 +72,36 @@ public:
             if (fraction.size() == 0) {
                 fraction = "0";
             }
-        }
-        else {
+        } else {
             integer = "0";
             fraction = "0";
             sign = '+';
         }
     }
-    BigReal(const BigReal &other){
+
+    BigReal(const BigReal &other) {
         sign = other.sign;
         integer = other.integer;
         fraction = other.fraction;
     }
-    BigReal &operator=(const BigReal &other){
+
+    BigReal &operator=(const BigReal &other) {
         sign = other.sign;
         integer = other.integer;
         fraction = other.fraction;
     }
-    BigReal operator+( BigReal &other){
+
+    BigReal operator+(BigReal &other) {
         BigReal res;
         if (integer.size() != other.integer.size()) {
             int diff;
             if (integer.size() > other.integer.size()) {
-                diff =  integer.size()-other.integer.size() ;
+                diff = integer.size() - other.integer.size();
                 for (int i = 0; i < diff; ++i) {
                     other.integer.insert(0, "0");
                 }
-            }
-            else{
-                diff =  other.integer.size()-integer.size() ;
+            } else {
+                diff = other.integer.size() - integer.size();
                 for (int i = 0; i < diff; ++i) {
                     integer.insert(0, "0");
                 }
@@ -111,62 +110,139 @@ public:
         if (fraction.size() != other.fraction.size()) {
             int diff;
             if (fraction.size() > other.fraction.size()) {
-                diff = fraction.size()- other.fraction.size()  ;
+                diff = fraction.size() - other.fraction.size();
                 for (int i = 0; i < diff; ++i) {
                     other.fraction += "0";
                 }
-            }
-
-            else{
-                diff =   other.fraction.size()-fraction.size() ;
+            } else {
+                diff = other.fraction.size() - fraction.size();
                 for (int i = 0; i < diff; ++i) {
                     fraction += "0";
                 }
             }
         }
         res = other;
-        if(sign == other.sign){
-        int carry=0;
-        for (int i = fraction.size()-1; i >= 0 ; --i) {
-            int a,b,sum;
-            a = (int)fraction[i] - 48;
-            b = (int)other.fraction[i] - 48;
-            sum = a + b + carry;
-            if(sum > 9){
-                carry = 1;
-                sum -= 10;
-            }
-            else{
-                carry = 0;
-            }
-            res.fraction[i] = sum + 48;
+        if (sign == other.sign) {
+            int carry = 0;
+            for (int i = fraction.size() - 1; i >= 0; --i) {
+                int a, b, sum;
+                a = (int) fraction[i] - 48;
+                b = (int) other.fraction[i] - 48;
+                sum = a + b + carry;
+                if (sum > 9) {
+                    carry = 1;
+                    sum -= 10;
+                } else {
+                    carry = 0;
+                }
+                res.fraction[i] = sum + 48;
 
-        }
-        for (int i = integer.size()-1; i >= 0 ; --i) {
-            int a,b,sum;
-            a = (int)integer[i] - 48;
-            b = (int)other.integer[i] - 48;
-            sum = a + b + carry;
-            if(sum > 9){
-                carry = 1;
-                sum -= 10;
             }
-            else{
-                carry = 0;
+            for (int i = integer.size() - 1; i >= 0; --i) {
+                int a, b, sum;
+                a = (int) integer[i] - 48;
+                b = (int) other.integer[i] - 48;
+                sum = a + b + carry;
+                if (sum > 9) {
+                    carry = 1;
+                    sum -= 10;
+                } else {
+                    carry = 0;
+                }
+                res.integer[i] = sum + 48;
             }
-            res.integer[i] = sum + 48;
-        }
-        if(carry != 0){
-            res.integer.insert(0, "1");
-        }
+            if (carry != 0) {
+                res.integer.insert(0, "1");
+            }
         }
 
-        return BigReal(res.sign + res.integer + "."+ res.fraction);
+        return BigReal(res.sign + res.integer + "." + res.fraction);
 
     }
 
 
-    BigReal operator-(BigReal &other);
+    BigReal operator-(BigReal &other) {
+        BigReal total;
+        int diff;
+        if (integer.size() > other.integer.size()) {
+            diff = integer.size() - other.integer.size();
+            for (int i = 0; i < diff; ++i) {
+                other.integer.insert(0, "0");
+            }
+        } else {
+            diff = other.integer.size() - integer.size();
+            for (int i = 0; i < diff; ++i) {
+                integer.insert(0, "0");
+            }
+        }
+
+        if (fraction.size() != other.fraction.size()) {
+            int diff;
+            if (fraction.size() > other.fraction.size()) {
+                diff = fraction.size() - other.fraction.size();
+                for (int i = 0; i < diff; ++i) {
+                    other.fraction += "0";
+                }
+            }
+        } else {
+            diff = other.fraction.size() - fraction.size();
+            for (int i = 0; i < diff; ++i) {
+                fraction += "0";
+            }
+        }
+        total = other;
+        bool borrow = false, borrowInt = false;
+        for (int i = fraction.size() - 1; i >= 0; --i) {
+            int a, b, sum;
+            if (borrow) {
+                if (fraction[i - 1] != '0') {
+                    fraction[i - 1] -= 1;
+                } else {
+                    int counter = i;
+                    while (fraction[counter - 1] == '0') {
+                        fraction[counter - 1] = '9';
+                        counter--;
+                    }
+                    if (fraction[counter - 1] == '.') {
+                        borrowInt = true;
+                        cout << "borrowInt" << endl;
+                    } else {
+                        fraction[counter - 1] -= 1;
+                    }
+                }
+
+            }
+            a = (int) fraction[i] - 48;
+            b = (int) other.fraction[i] - 48;
+            if (a < b) {
+                borrow = true;
+                sum = (a + 10) - b;
+            } else {
+                sum = a - b;
+                borrow = false;
+            }
+            fraction[i] = sum + 48;
+            total.fraction[i] = fraction[i];
+
+
+        }
+        cout<<total.fraction;
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     void print(){
         cout<<sign<<integer<<"."<<fraction<<endl;
     }
@@ -319,5 +395,7 @@ public:
 
 
 int main(){
-       
+        BigReal o1(".523"),o2(".143"),o3,o4;
+        o3 = o1 + o2;
+        cout << o3;
 }
