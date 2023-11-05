@@ -1,0 +1,23 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+#ifndef A2_S1_20220311_7_DOMINO_H
+#define A2_S1_20220311_7_DOMINO_H
+
+
+class domino{
+    int leftdots;
+    int rightdots;
+public:
+    domino();
+    domino(int l , int r);
+    friend istream & operator>>(istream & in, domino & d);
+    friend ostream & operator<<(ostream & out, domino & d);
+    friend bool  operator==(domino d1, domino d2);
+    friend bool isdominochain(vector <domino> v,deque<domino> & deq);
+    friend void print(deque <domino> deq);
+};
+
+
+#endif
