@@ -87,7 +87,45 @@ public:
         integer = other.integer;
         fraction = other.fraction;
     }
-    BigReal operator+(BigReal &other);
+    BigReal operator+(BigReal &other){
+        BigReal res;
+        if (integer.size() != other.integer.size()) {
+            int diff;
+            if (integer.size() > other.integer.size()) {
+                diff =  integer.size()-other.integer.size() ;
+                for (int i = 0; i < diff; ++i) {
+                    other.integer.insert(0, "0");
+                }
+            }
+            else{
+                diff =  other.integer.size()-integer.size() ;
+                for (int i = 0; i < diff; ++i) {
+                    integer.insert(0, "0");
+                }
+            }
+        }
+        if (fraction.size() != other.fraction.size()) {
+            int diff;
+            if (fraction.size() > other.fraction.size()) {
+                diff = fraction.size()- other.fraction.size()  ;
+                for (int i = 0; i < diff; ++i) {
+                    other.fraction += "0";
+                }
+            }
+
+            else{
+                diff =   other.fraction.size()-fraction.size() ;
+                for (int i = 0; i < diff; ++i) {
+                    fraction += "0";
+                }
+            }
+        }
+        res = other;
+        cout<<res;
+
+    }
+
+
     BigReal operator-(BigReal &other);
     void print(){
         cout<<sign<<integer<<"."<<fraction<<endl;
@@ -241,5 +279,5 @@ public:
 
 
 int main(){
-    
+
 }
