@@ -82,12 +82,12 @@ public:
         }
     }
     BigReal(const BigReal &other);
-    BigReal &operator=(BigReal &other){
+    BigReal &operator=(const BigReal &other){
         sign = other.sign;
         integer = other.integer;
         fraction = other.fraction;
     }
-    BigReal operator+(BigReal &other){
+    BigReal operator+( BigReal &other){
         BigReal res;
         if (integer.size() != other.integer.size()) {
             int diff;
@@ -157,7 +157,7 @@ public:
         }
         }
 
-        return res;
+        return BigReal(res.sign + res.integer + "."+ res.fraction);
 
     }
 
@@ -306,7 +306,7 @@ public:
         else return false;
     }
 
-    friend ostream &operator<<(ostream &out, BigReal&num) {
+    friend ostream &operator<<(ostream &out, const BigReal&num) {
         out<<num.sign<<num.integer<<"."<<num.fraction<<endl;
     }
 
@@ -315,7 +315,6 @@ public:
 
 
 int main(){
+   
 
 }
-     
-
