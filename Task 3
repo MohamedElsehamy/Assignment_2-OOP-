@@ -4,7 +4,7 @@ using namespace std;
 class machine{
 private:
     vector<string> reg;
-    map<string, string> mem[256];
+    vector <pair<string, string>> mem;
     vector<char> in = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
     vector<string > out;
 public:
@@ -17,40 +17,41 @@ public:
                 stream << in[i] <<in[j];
                 stream>>c1>>c2;
                 str = c1 + c2;
-                mem->insert({str ,"00"});
+                mem.push_back(make_pair(str,"00"));
                 out.push_back(str) ;
 
             }
         }
-        for (auto itr = mem->begin(); itr != mem->end(); ++itr) {
-            cout << itr->first
-                 << '\t' << itr->second << '\n';
+
+    }
+    void loadInput() {
+        fstream file;
+        file.open("input1.txt");
+        string line;
+        string s = "";
+        vector <string> ins;
+        while (getline(file, line)){
+            s += line[2];
+            s += line[6];
+            ins.push_back(s);
+            s.clear();
+            s += line[10];
+            s += line[11];
+            ins.push_back(s);
+            s.clear();
+        }
+        for (int i = 0; i < ins.size(); ++i) {
+            mem[i].second = ins[i];
         }
 
+        for (auto itr = mem.begin(); itr != mem.end(); ++itr) {
+            cout << itr->first << '\t' << itr->second <<'\n';
+        }
     }
 };
 
 
 int main() {
-    //machine l;
-    fstream file;
-    file.open("file.txt");
-    string line ;
-    string s = "" ;
-    while (getline(file,line))
-    {
-        for ( int i = 0 ; i < line.size() ;i++)
-        {
-            if (line[i] == 'x')
-            {
-                s += line[i+1] ;
-                s += line[i+5] ;
-                s += line[i+9] ;
-                s += line[i+10] ;
-                cout << s << endl;
-                break;
-            }
-            s.clear();
-        }
-    }
+    machine l;
+    l.loadInput();
 }
