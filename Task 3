@@ -3,10 +3,10 @@ using namespace std;
 
 class machine{
 private:
-    vector<string> reg;
+    vector <string> reg;
     vector <pair<string, string>> mem;
-    vector<char> in = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
-
+    vector <char> in = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+    vector <string> address;
 public:
     machine(){
         for (int i = 0; i < in.size(); ++i) {
@@ -18,7 +18,7 @@ public:
                 stream>>c1>>c2;
                 str = c1 + c2;
                 mem.push_back(make_pair(str,"00"));
-
+                address.push_back(str);
             }
         }
         for (int i = 0; i < 16; ++i) {
@@ -79,8 +79,23 @@ public:
     }
     void store(string instruction){
         string sub = instruction.substr(2,2);
+        int index;
+        if(instruction[1]<58 and instruction[1]>47){
+            index = instruction[1] - 48;
+        }
+        else{
+            index = instruction[1] - 55;
+        }
+        for (int i = 0; i < mem.size(); ++i) {
+            if(mem[i].first == sub){
+                mem[i].second = reg[index];
+            }
+        }
     }
     void move(){
+
+    }
+    void add(){
 
     }
     void jump(){
@@ -89,11 +104,58 @@ public:
     void halt(){
 
     }
+    void print() {
+        cout << "Register (CPU):" << endl;
+        for (int i = 0; i < reg.size(); ++i) {
+            cout << address[i] << "   " << reg[i] << endl;
+        }
+        cout << "Memory:" << endl;
+        for (int i = 0; i < mem.size(); ++i) {
+            cout << mem[i].first << "   " << mem[i].second << endl;
+        }
+    }
 };
 
 
 int main() {
-
     machine l;
-    l.loadInput();
+    fstream file;
+    file.open("input1.txt");
+    string line;
+    string s = "";
+    vector <string> ins;
+    while (getline(file, line)){
+        s += line[2];
+        s += line[6];
+        s += line[10];
+        s += line[11];
+        ins.push_back(s);
+        s.clear();
+    }
+    for ( int i = 0 ; i < ins.size() ; i++)
+    {
+        if (ins[i][i] == '1' )
+        {
+            l.load1(s) ;
+        }else if (ins[i][i] == '2' )
+        {
+            l.load2(s);
+        }else if (ins[i][i] == '3' )
+        {
+            l.store(s) ;
+        } else if (ins[i][i] == '4' )
+        {
+            l.move() ;
+        }else if (ins[i][i] == '5' )
+        {
+            l.add();
+        }else if (ins[i][i] == 'B' )
+        {
+            l.jump();
+        }else if (ins[i][i] == 'C' )
+        {
+            l.halt();
+        }
+    }
+    l.print();
 }
