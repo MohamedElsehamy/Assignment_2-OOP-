@@ -1,0 +1,37 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+
+class machine{
+private:
+    vector<pair<string,string>> reg;
+    map<string, string> mem[256];
+    vector<char> in = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+    vector<string > out;
+public:
+    machine(){
+        for (int i = 0; i < in.size(); ++i) {
+            for (int j = 0; j < in.size(); ++j) {
+                string str;
+                string c1,c2;
+                stringstream stream;
+                stream << in[i] <<in[j];
+                stream>>c1>>c2;
+                str = c1 + c2;
+                 mem->insert({str ,"00"});
+                out.push_back(str) ;
+
+            }
+        }
+        for (auto itr = mem->begin(); itr != mem->end(); ++itr) {
+            cout << itr->first
+                 << '\t' << itr->second << '\n';
+        }
+        
+    }
+};
+
+
+int main() {
+    machine l ;
+}
