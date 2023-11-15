@@ -1,16 +1,18 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-class machine{
-private:
-    vector <string> reg;
-    vector <pair<string, string>> mem;
+class machine{ //machine class which is also the parent class in the code.
+protected:
+    vector <pair<string, string>> mem; //vector of a pair of strings to store the memory addresses and content.
+    vector <string> reg; //vector of strings to store the register addresses and content.
     vector <char> in = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
     vector <string> address;
+    string PC = "00";
+
 public:
-    machine(){
+    machine(){ //default constructor the initializes the content of the memory and registers with the value 0.
         for (int i = 0; i < in.size(); ++i) {
-            for (int j = 0; j < in.size(); ++j) {
+            for (int j = 0; j < in.size(); ++j) { //A loop to make the content of the memory 0.
                 string str;
                 string c1,c2;
                 stringstream stream;
@@ -21,12 +23,13 @@ public:
                 address.push_back(str);
             }
         }
-        for (int i = 0; i < 16; ++i) {
+        for (int i = 0; i < 16; ++i) { //A loop to make the content of the registers 0.
             reg.push_back("00");
         }
 
     }
-    void loadInput() {
+
+    void loadInput() { // loading the input from the file to vector of pairs which represents the memory.
         fstream file;
         file.open("input1.txt");
         string line;
@@ -46,14 +49,13 @@ public:
             mem[i].second = ins[i];
         }
 
-        for (auto itr = mem.begin(); itr != mem.end(); ++itr) {
-            cout << itr->first << '\t' << itr->second <<'\n';
-        }
     }
 
-    void load1(string instruction){
-        string sub = instruction.substr(2,2);
-        for (int i = 0; i < mem.size(); ++i) {
+    void load1(string instruction){ // A function to do the "1" command of the machine language.
+        // For eg: 1RXY loads the register R with the content found in the memory cell with the address XY.
+
+        string sub = instruction.substr(2,2); //A string that contains the address of the memory.
+        for (int i = 0; i < mem.size(); ++i) { //A loop to get the index of the address of the register.
             if(mem[i].first == sub){
                 int index;
                 if(instruction[1]<58 and instruction[1]>47){
@@ -62,22 +64,27 @@ public:
                 else{
                     index = instruction[1] - 55;
                 }
-                reg[index] = mem[i].second;
+                reg[index] = mem[i].second; // loading the register with the content of the memory cell.
             }
         }
+
     }
-    void load2(string instruction){
+    void load2(string instruction){// A function to do the "2" command of the machine language.
+        // For eg: 2RXY loads the register R with the value XY.
+
         string sub = instruction.substr(2,2);
         int index;
-        if(instruction[1]<58 and instruction[1]>47){
+        if(instruction[1]<58 and instruction[1]>47){//A loop to get the index of the address of the register.
             index = instruction[1] - 48;
         }
         else{
             index = instruction[1] - 55;
         }
-        reg[index] = sub;
+        reg[index] = sub; // loading the register with the value XY.
+
     }
-    void store(string instruction){
+    void store(string instruction){ // A function to do the "3" command of the machine language.
+        // For eg: 3RXY stores the content of register R in the memory cell XY.
         string sub = instruction.substr(2,2);
         int index;
         if(instruction[1]<58 and instruction[1]>47){
@@ -91,71 +98,237 @@ public:
                 mem[i].second = reg[index];
             }
         }
-    }
-    void move(){
 
     }
-    void add(){
-
-    }
-    void jump(){
-
-    }
-    void halt(){
-
-    }
-    void print() {
-        cout << "Register (CPU):" << endl;
-        for (int i = 0; i < reg.size(); ++i) {
-            cout << address[i] << "   " << reg[i] << endl;
+    void move(string instruction){
+        int index1, index2;
+        if(instruction[2]<58 and instruction[2]>47){
+            index1 = instruction[2] - 48;
         }
+        else{
+            index1 = instruction[2] - 55;
+        }
+        if(instruction[3]<58 and instruction[3]>47){
+            index2 = instruction[3] - 48;
+        }
+        else{
+            index2 = instruction[3] - 55;
+        }
+        reg[index2] = reg[index1];
+
+    }
+    void add(string instruction){
+        int i = (instruction[1]) - 48 ;
+        int j = (instruction[2]) - 48 ;
+        int k = (instruction[3]) - 48 ;
+        vector <int> v ;
+        int num1 = charToint(reg[j][1]) ;
+        int num2 = charToint(reg[j][0]) ;
+        int num3 = charToint(reg[k][1]) ;
+        int num4 = charToint(reg[k][0]) ;
+
+        num2 = 16 * num2 ;
+        num4 = 16 * num4 ;
+
+
+        int res = num1 + num2 + num3 + num4 ;
+
+
+        while (res > 0 )
+        {
+            int r = res % 16 ;
+            v.push_back(r) ;
+            res = res / 16 ;
+        }
+        for (int a = 0 ; a < v.size() ; a++ )
+        {
+            if (v[a] >= 10 )
+            {
+                v[a] = v[a] + 55 ;
+            } else if (v[a] < 10 )
+            {
+                v[a] = v[a] + 48 ;
+            }
+        }
+        reg[i][0] = v[1] ;
+        reg[i][1] = v[0] ;
+
+    }
+    bool flag = true;
+    void jump(string instruction) {
+        string sub = instruction.substr(2, 2);
+        int index;
+        if (instruction[1] < 58 and instruction[1] > 47) {
+            index = instruction[1] - 48;
+        } else {
+            index = instruction[1] - 55;
+        }
+        if (reg[index] == reg[0]) {
+            vector<string> ins;
+            vector<string>afterJump;
+            for (int i = 0; i < mem.size(); ++i) {
+                if (mem[i].first == sub) {
+                    for (int j = i; j < mem.size(); ++ ++j) {
+                        string newCommand;
+                        newCommand = mem[j].second + mem[j + 1].second;
+                        ins.push_back(newCommand);
+                    }
+                    for (int j = i; j < mem.size(); ++j) {
+                        string newCommand;
+                        newCommand = mem[j].second;
+                        afterJump.push_back(newCommand);
+                    }
+                    for (int k = 0; k < ins.size(); k++) {
+                        string str = ins[k];
+
+                        if (str[0] == '1') {
+                            load1(str);
+                        } else if (str[0] == '2') {
+                            load2(str);
+                        } else if (str[0] == '3') {
+                            store(str);
+                        } else if (str[0] == '4') {
+                            move(str);
+                        } else if (str[0] == '5') {
+                            add(str);
+                        } else if (str[0] == 'B') {
+                            jump(str);
+                        } else if (str[0] == 'C') {
+                            flag = false;
+                            string addressX;
+                            for (int j = 0; j <mem.size() ; ++j) {
+                                if (mem[j].second == afterJump[0] && mem[j+1].second == afterJump[1]){
+                                    addressX = mem[j].first;
+                                    break;
+                                }
+                            }
+                            for (int j = 0; j < mem.size(); ++j) {
+                                if (mem[j].first == addressX ){
+                                    for (int l = j; l < afterJump.size(); ++ ++l) {
+                                        if(mem[l].second == "C0" && mem[l+1].second == "00"){
+                                            PC = mem[l+2].first;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    int charToint(char c) {
+        if (c >= '0' && c <= '9') {
+            return c - '0';
+        } else if (c >= 'A' && c <= 'F') {
+            return 10 + c - 'A';
+        }
+    }
+
+    void halt(int num){
+        if(flag){
+            cout<<"counter:"<<endl;
+            cout<<mem[num * 2 + 2].first<<endl;
+        }
+        if(!flag){
+            cout<<"counter:"<<endl;
+            cout<<PC<<endl;
+        }
+    }
+
+};
+
+class regAndMem:public machine{
+public:
+    regAndMem(){
+        for (int i = 0; i < in.size(); ++i) {
+            for (int j = 0; j < in.size(); ++j) {
+                string str;
+                string c1,c2;
+                stringstream stream;
+                stream << in[i] <<in[j];
+                stream>>c1>>c2;
+                str = c1 + c2;
+                mem.push_back(make_pair(str,"00"));
+                address.push_back(str);
+            }
+        }
+        for (int i = 0; i < 16; ++i) {
+            reg.push_back("00");
+        }
+    }
+    void printMem(){
         cout << "Memory:" << endl;
         for (int i = 0; i < mem.size(); ++i) {
             cout << mem[i].first << "   " << mem[i].second << endl;
         }
     }
+    void printReg(){
+        halt(ind);
+        cout << "Register (CPU):" << endl;
+        for (int i = 0; i < 16; ++i) {
+            cout << address[i] << "   " << reg[i] << endl;
+        }
+
+
+    }
+    int ind;
+    void instructons(){
+        fstream file;
+        file.open("input1.txt");
+        string line;
+        string s = "";
+        vector <string> ins;
+        while (getline(file, line)){
+            s += line[2];
+            s += line[6];
+            s += line[10];
+            s += line[11];
+            ins.push_back(s);
+            s.clear();
+        }
+        loadInput();
+        for ( int i = 0 ; i < ins.size() ; i++)
+        {
+            string str = ins[i];
+
+            if (str[0] == '1' )
+            {
+                load1(str) ;
+            }
+            else if (str[0] == '2' )
+            {
+                load2(str);
+            }else if (str[0] == '3' )
+            {
+                store(str) ;
+            } else if (str[0] == '4' )
+            {
+                move(str) ;
+            }else if (str[0] == '5' )
+            {
+                add(str);
+            }else if (str[0] == 'B' )
+            {
+                jump(str);
+            }else if (str[0] == 'C' )
+            {
+                ind = i;
+                break;
+            }
+        }
+        printReg();
+        printMem();
+    }
 };
 
 
 int main() {
-    machine l;
-    fstream file;
-    file.open("input1.txt");
-    string line;
-    string s = "";
-    vector <string> ins;
-    while (getline(file, line)){
-        s += line[2];
-        s += line[6];
-        s += line[10];
-        s += line[11];
-        ins.push_back(s);
-        s.clear();
-    }
-    for ( int i = 0 ; i < ins.size() ; i++)
-    {
-        if (ins[i][i] == '1' )
-        {
-            l.load1(s) ;
-        }else if (ins[i][i] == '2' )
-        {
-            l.load2(s);
-        }else if (ins[i][i] == '3' )
-        {
-            l.store(s) ;
-        } else if (ins[i][i] == '4' )
-        {
-            l.move() ;
-        }else if (ins[i][i] == '5' )
-        {
-            l.add();
-        }else if (ins[i][i] == 'B' )
-        {
-            l.jump();
-        }else if (ins[i][i] == 'C' )
-        {
-            l.halt();
-        }
-    }
-    l.print();
+    machine mach;
+    regAndMem regX;
+    regX.instructons();
 }
