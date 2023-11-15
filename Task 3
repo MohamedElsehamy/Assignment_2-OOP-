@@ -1,10 +1,9 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-
 class machine{
 private:
-    vector<pair<string,string>> reg;
+    vector<string> reg;
     map<string, string> mem[256];
     vector<char> in = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
     vector<string > out;
@@ -18,7 +17,7 @@ public:
                 stream << in[i] <<in[j];
                 stream>>c1>>c2;
                 str = c1 + c2;
-                 mem->insert({str ,"00"});
+                mem->insert({str ,"00"});
                 out.push_back(str) ;
 
             }
@@ -27,11 +26,31 @@ public:
             cout << itr->first
                  << '\t' << itr->second << '\n';
         }
-        
+
     }
 };
 
 
 int main() {
-    machine l ;
+    //machine l;
+    fstream file;
+    file.open("file.txt");
+    string line ;
+    string s = "" ;
+    while (getline(file,line))
+    {
+        for ( int i = 0 ; i < line.size() ;i++)
+        {
+            if (line[i] == 'x')
+            {
+                s += line[i+1] ;
+                s += line[i+5] ;
+                s += line[i+9] ;
+                s += line[i+10] ;
+                cout << s << endl;
+                break;
+            }
+            s.clear();
+        }
+    }
 }
