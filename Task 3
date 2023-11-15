@@ -6,7 +6,7 @@ private:
     vector<string> reg;
     vector <pair<string, string>> mem;
     vector<char> in = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
-    vector<string > out;
+
 public:
     machine(){
         for (int i = 0; i < in.size(); ++i) {
@@ -18,9 +18,11 @@ public:
                 stream>>c1>>c2;
                 str = c1 + c2;
                 mem.push_back(make_pair(str,"00"));
-                out.push_back(str) ;
 
             }
+        }
+        for (int i = 0; i < 16; ++i) {
+            reg.push_back("00");
         }
 
     }
@@ -48,10 +50,50 @@ public:
             cout << itr->first << '\t' << itr->second <<'\n';
         }
     }
+
+    void load1(string instruction){
+        string sub = instruction.substr(2,2);
+        for (int i = 0; i < mem.size(); ++i) {
+            if(mem[i].first == sub){
+                int index;
+                if(instruction[1]<58 and instruction[1]>47){
+                    index = instruction[1] - 48;
+                }
+                else{
+                    index = instruction[1] - 55;
+                }
+                reg[index] = mem[i].second;
+            }
+        }
+    }
+    void load2(string instruction){
+        string sub = instruction.substr(2,2);
+        int index;
+        if(instruction[1]<58 and instruction[1]>47){
+            index = instruction[1] - 48;
+        }
+        else{
+            index = instruction[1] - 55;
+        }
+        reg[index] = sub;
+    }
+    void store(string instruction){
+        string sub = instruction.substr(2,2);
+    }
+    void move(){
+
+    }
+    void jump(){
+
+    }
+    void halt(){
+
+    }
 };
 
 
 int main() {
+
     machine l;
     l.loadInput();
 }
